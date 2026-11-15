@@ -3,205 +3,128 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BUG 工作台 · bugs.example.com</title>
+<title>你完了 · 这个页面被你点坏了</title>
 <style>
-  /* 全部 M3 样式内联在这里，不引用外部 style.css */
-  :root {
-    --md-primary: #6750A4;
-    --md-on-primary: #FFFFFF;
-    --md-background: #FEF7FF;
-    --md-on-background: #1D1B20;
-    --md-surface-container: #F3EDF7;
-    --md-surface-container-low: #F7F2FA;
-    --md-surface-container-high: #ECE6F0;
-    --md-surface-container-lowest: #FFFFFF;
-    --md-on-surface-variant: #49454F;
-    --md-outline-variant: #CAC4D0;
-    --md-success: #386A20;
-    --md-tertiary: #7D5260;
-    --md-error: #B3261E;
-    --radius-s: 8px;
-    --radius-m: 12px;
-    --font: "Roboto Flex", "Roboto", "PingFang SC", "Noto Sans SC", sans-serif;
-  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: var(--font);
-    background: var(--md-background);
-    color: var(--md-on-background);
-    line-height: 1.5;
+    font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+    background: #111;
+    color: #eee;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    overflow: hidden;
+    text-align: center;
   }
-  .app-bar {
-    position: sticky; top: 0; z-index: 20;
-    display: flex; align-items: center; gap: 10px;
-    height: 64px; padding: 0 16px;
-    background: var(--md-surface-container);
-    font-size: 18px; font-weight: 500;
+  .glitch {
+    font-size: clamp(32px, 8vw, 72px);
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #fff;
+    position: relative;
+    animation: shake 0.3s infinite;
   }
-  .app-bar__logo {
-    width: 32px; height: 32px; border-radius: var(--radius-s);
-    background: var(--md-primary); color: var(--md-on-primary);
-    display: grid; place-items: center; font-size: 16px;
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%;
   }
-  .page {
-    max-width: 840px; margin: 0 auto;
-    padding: 24px 16px 64px;
-    display: flex; flex-direction: column; gap: 24px;
+  .glitch::before { color: #ff3b3b; transform: translate(-3px, 2px); opacity: 0.7; }
+  .glitch::after  { color: #3b8bff; transform: translate(3px, -2px); opacity: 0.7; }
+  @keyframes shake {
+    0%,100% { transform: translate(0,0); }
+    25% { transform: translate(-2px,1px); }
+    75% { transform: translate(2px,-1px); }
   }
-  .card { background: var(--md-surface-container-low); border-radius: var(--radius-m); padding: 20px; }
-  .card__title { font-size: 20px; line-height: 28px; font-weight: 500; margin-bottom: 4px; }
-  .card__desc { font-size: 13px; line-height: 20px; color: var(--md-on-surface-variant); margin-bottom: 16px; }
-  .quick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
-  .quick {
-    display: flex; flex-direction: column; gap: 4px; padding: 16px;
-    border-radius: var(--radius-m); background: var(--md-surface-container-high);
-    text-decoration: none; color: var(--md-on-background);
+  .sub {
+    margin-top: 24px;
+    font-size: clamp(14px, 3vw, 18px);
+    color: #aaa;
+    line-height: 1.8;
+    max-width: 520px;
   }
-  .quick__icon { font-size: 24px; }
-  .quick__label { font-size: 15px; font-weight: 500; }
-  .quick__meta { font-size: 12px; color: var(--md-on-surface-variant); }
-  .embed-frame {
-    width: 100%; min-height: 480px;
-    border: 1px solid var(--md-outline-variant);
-    border-radius: var(--radius-s);
-    background: var(--md-surface-container-lowest);
+  .sub b { color: #ff3b3b; }
+  .btn {
+    margin-top: 36px;
+    padding: 14px 40px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    background: #ff3b3b;
+    color: #fff;
+    transition: transform 0.1s, box-shadow 0.2s;
   }
-  .bug-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  .bug-table th {
-    text-align: left; font-size: 12px; font-weight: 500;
-    color: var(--md-on-surface-variant); padding: 10px 8px;
-    border-bottom: 1px solid var(--md-outline-variant);
+  .btn:hover { box-shadow: 0 0 24px rgba(255,59,59,0.7); }
+  .btn:active { transform: scale(0.94); }
+  .count {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #666;
+    font-family: monospace;
   }
-  .bug-table td { padding: 12px 8px; border-bottom: 1px solid var(--md-outline-variant); }
-  .bug-table tr:last-child td { border-bottom: none; }
-  .chip { display: inline-block; font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: var(--radius-s); }
-  .chip--ok { background: #B8F397; color: #042100; }
-  .chip--warn { background: #FFD8E4; color: #31111D; }
-  .terminal {
-    background: var(--md-surface-container);
-    border-radius: var(--radius-m);
-    padding: 12px 16px;
-    font-family: "Roboto Mono", Consolas, monospace;
-    font-size: 12px; line-height: 1.9;
-    color: var(--md-on-surface-variant);
-    max-height: 150px; overflow-y: auto;
+  .chaos {
+    position: fixed;
+    font-size: 40px;
+    pointer-events: none;
+    animation: fly 2s ease-out forwards;
+    z-index: 99;
   }
-  .terminal__line { display: flex; gap: 10px; }
-  .terminal__time { color: #79747E; flex-shrink: 0; }
-  .terminal__ok { color: var(--md-success); }
-  .terminal__warn { color: var(--md-tertiary); }
-  .terminal__err { color: var(--md-error); }
-  .terminal__sys { color: var(--md-primary); }
-  footer { text-align: center; font-size: 12px; color: var(--md-on-surface-variant); padding: 24px 16px 40px; }
+  @keyframes fly {
+    0% { opacity: 1; transform: translate(0,0) scale(1) rotate(0deg); }
+    100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(2) rotate(360deg); }
+  }
+  body.meltdown { animation: hue 0.15s infinite; }
+  @keyframes hue { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
 </style>
 </head>
 <body>
 
-<header class="app-bar">
-  <span class="app-bar__logo">🐞</span>
-  <span>BUG 工作台</span>
-</header>
-
-<main class="page" id="bugs-workbench">
-
-  <section class="card">
-    <h2 class="card__title">快捷入口</h2>
-    <p class="card__desc">常用操作，点击进入对应系统。</p>
-    <div class="quick-grid">
-      <a class="quick" href="https://jira.example.com" target="_blank" rel="noopener">
-        <span class="quick__icon">📋</span><span class="quick__label">Jira 缺陷单</span><span class="quick__meta">新建 / 查询</span>
-      </a>
-      <a class="quick" href="https://wiki.example.com/security" target="_blank" rel="noopener">
-        <span class="quick__icon">📚</span><span class="quick__label">测试规范</span><span class="quick__meta">必读</span>
-      </a>
-      <a class="quick" href="https://grafana.example.com" target="_blank" rel="noopener">
-        <span class="quick__icon">📈</span><span class="quick__label">监控面板</span><span class="quick__meta">实时告警</span>
-      </a>
-      <a class="quick" href="mailto:security@example.com">
-        <span class="quick__icon">✉️</span><span class="quick__label">邮件上报</span><span class="quick__meta">security@</span>
-      </a>
-    </div>
-  </section>
-
-  <section class="card">
-    <h2 class="card__title">提交漏洞</h2>
-    <p class="card__desc">表单内嵌，填完直接提交。</p>
-    <iframe class="embed-frame" src="about:blank" title="漏洞提交表单" loading="lazy" referrerpolicy="no-referrer"></iframe>
-  </section>
-
-  <section class="card">
-    <h2 class="card__title">已知漏洞</h2>
-    <p class="card__desc">提交前先检索，避免重复报告。</p>
-    <table class="bug-table">
-      <thead>
-        <tr><th>编号</th><th>标题</th><th>影响范围</th><th>状态</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>BUG-1042</td><td>登录接口错误信息泄露</td><td>auth.example.com</td><td><span class="chip chip--ok">已修复</span></td></tr>
-        <tr><td>BUG-1038</td><td>文件上传类型校验绕过</td><td>cdn.example.com</td><td><span class="chip chip--warn">处理中</span></td></tr>
-        <tr><td>BUG-1021</td><td>用户资料页 IDOR</td><td>api.example.com</td><td><span class="chip chip--ok">已修复</span></td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section class="card">
-    <h2 class="card__title">操作日志</h2>
-    <p class="card__desc">页面内操作会被记录。</p>
-    <div class="terminal" id="terminal">
-      <div class="terminal__line">
-        <span class="terminal__time">--:--</span>
-        <span class="terminal__sys">系统就绪…</span>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<footer>内部工作页 · bugs.example.com</footer>
+  <div class="glitch" data-text="你 完 了">你 完 了</div>
+  <p class="sub">你刚刚点了一个<b>不该点的东西</b>。<br>系统已被你搞崩，正在逃跑……</p>
+  <button class="btn" id="btn">再点一下试试</button>
+  <div class="count" id="count">已作死 0 次</div>
 
 <script>
-/* 页面自身逻辑内联在这里，不依赖 work.js */
 (function () {
   'use strict';
-  var root = document.getElementById('bugs-workbench') || document;
-  var terminal = root.querySelector('#terminal');
+  var btn = document.getElementById('btn');
+  var countEl = document.getElementById('count');
+  var n = 0;
+  var emojis = ['💥','🔥','💀','👾','🚨','☠️','🧨','💣'];
 
-  function pad(n) { return String(n).padStart(2, '0'); }
+  btn.addEventListener('click', function (e) {
+    n++;
+    countEl.textContent = '已作死 ' + n + ' 次';
 
-  function log(msg, type) {
-    if (!terminal) return;
-    var now = new Date();
-    var line = document.createElement('div');
-    line.className = 'terminal__line';
-    var time = document.createElement('span');
-    time.className = 'terminal__time';
-    time.textContent = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
-    var text = document.createElement('span');
-    text.className = 'terminal__' + (type || 'sys');
-    text.textContent = msg;
-    line.appendChild(time);
-    line.appendChild(text);
-    terminal.appendChild(line);
-    terminal.scrollTop = terminal.scrollHeight;
-    while (terminal.children.length > 80) terminal.removeChild(terminal.firstChild);
-  }
+    // 到处乱飞的表情
+    var emoji = emojis[Math.floor(Math.random() * emojis.length)];
+    var el = document.createElement('div');
+    el.className = 'chaos';
+    el.textContent = emoji;
+    el.style.left = e.clientX + 'px';
+    el.style.top = e.clientY + 'px';
+    el.style.setProperty('--dx', (Math.random() * 400 - 200) + 'px');
+    el.style.setProperty('--dy', (Math.random() * 400 - 200) + 'px');
+    document.body.appendChild(el);
+    setTimeout(function () { el.remove(); }, 2000);
 
-  root.querySelectorAll('.quick').forEach(function (link) {
-    link.addEventListener('click', function () {
-      var label = link.querySelector('.quick__label');
-      log('打开快捷入口：' + (label ? label.textContent.trim() : link.getAttribute('href')), 'sys');
-    });
+    // 点多了开始崩坏
+    if (n === 5) document.body.classList.add('meltdown');
+    if (n === 10) {
+      document.querySelector('.sub').innerHTML = '别点了！<b>真的会出事的！</b>';
+    }
+    if (n === 20) {
+      document.querySelector('.glitch').textContent = '求 求 你 别 点 了';
+    }
   });
-
-  var embedFrame = root.querySelector('.embed-frame');
-  if (embedFrame) {
-    embedFrame.addEventListener('load', function () { log('提交表单已加载', 'ok'); });
-    var src = embedFrame.getAttribute('src');
-    if (!src || src === 'about:blank') log('提示：提交表单地址尚未配置', 'warn');
-  }
-
-  log('工作台就绪 · ' + location.pathname, 'sys');
 })();
 </script>
 
